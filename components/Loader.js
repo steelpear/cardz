@@ -1,5 +1,5 @@
 import {useState, useEffect} from 'react'
-import Head from 'next/head'
+import {MainLayout} from '../components/MainLayout'
 import { ProgressSpinner } from 'primereact/progressspinner'
 import 'primereact/resources/themes/lara-light-indigo/theme.css'
 import 'primereact/resources/primereact.css'
@@ -9,21 +9,15 @@ import 'primeflex/primeflex.css'
 export const Loader = () => {
   const [height, setHeight] = useState(null)
 
-  useEffect(() => {setHeight(window.innerHeight - 20)}, [])
+  useEffect(() => {setHeight(window.innerHeight)}, [])
 
   if (height) {
     return (
-      <>
-        <Head>
-          <title>Анкеты объектов</title>
-          <meta name="description" content="Анкеты объектов" />
-          <meta name="viewport" content="width=device-width, initial-scale=1" />
-          <link rel="icon" href="/favicon.ico" />
-        </Head>
-        <div className="card flex justify-content-center align-items-center" style={{ height: height}}>
+      <MainLayout>
+        <div className="card flex justify-content-center align-items-center" style={{ height: height, marginTop: -60}}>
           <ProgressSpinner style={{width: '120px', height: '120px'}} strokeWidth="3" />
         </div>
-      </>
+      </MainLayout>
     )
-  } else {return (<></>)}
+  } else {return (<MainLayout></MainLayout>)}
 }

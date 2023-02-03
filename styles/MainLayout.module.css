@@ -1,0 +1,20 @@
+.nav {
+  position: fixed;
+  height: 60px;
+  left: 0;
+  top: 0;
+  right: 0;
+  background: var(--blue-800);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+  z-index: 1;
+}
+.main {
+  margin-top: 60px;
+  padding: 1rem;
+}
+.disabledlink {
+  pointer-events: none;
+}

@@ -1,7 +1,12 @@
 import Link from 'next/link'
 import Head from 'next/head'
+import {useRouter} from 'next/router'
+import 'primeicons/primeicons.css'
+import styles from '@/styles/MainLayout.module.css'
+import { ScrollTop } from 'primereact/scrolltop'
 
 export function MainLayout({ children }) {
+  const router = useRouter()
   return (
     <>
       <Head>
@@ -10,41 +15,17 @@ export function MainLayout({ children }) {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <nav>
+      <nav className={styles.nav}>
         <div>
-          <Link href={'/'}><span>Home</span></Link>
-          <span> | Анкеты объектов</span>
+          <Link href={'/'} className={router.route === '/' ? styles.disabledlink : ''}><i className="pi pi-home mr-3" style={{'fontSize': '1.8em', 'color': router.route === '/' ? 'lightgrey' : 'white' }}></i></Link>
+          <span style={{'fontSize': '1.4em', 'color': 'white'}}>Анкеты объектов</span>
         </div>
-        <Link href={'/posts'}><span>Posts</span></Link>
+        <Link href={'/info'}><i className="pi pi-info-circle" style={{'fontSize': '1.8em', 'color': 'white' }}></i></Link>
       </nav>
-      <main>
+      <main className={styles.main}>
         {children}
       </main>
-      <style jsx>{`
-        nav {
-          position: fixed;
-          height: 60px;
-          left: 0;
-          top: 0;
-          right: 0;
-          background: darkblue;
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          padding: 0 20px;
-          z-index: 1;
-        }
-        
-        nav span {
-          color: #fff;
-          text-decoration: none;
-        }
-        
-        main {
-          margin-top: 60px;
-          padding: 1rem;
-        }
-      `}</style>
+      <ScrollTop className="bg-gray-500" />
     </>
   )
 }
