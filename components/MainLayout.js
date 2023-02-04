@@ -18,9 +18,9 @@ export function MainLayout({ children }) {
       <nav className={styles.nav}>
         <div>
           <Link href={'/'} className={router.route === '/' ? styles.disabledlink : ''}><i className="pi pi-home mr-3" style={{'fontSize': '1.8em', 'color': router.route === '/' ? 'lightgrey' : 'white' }}></i></Link>
-          <span style={{'fontSize': '1.4em', 'color': 'white'}}>Анкеты объектов</span>
+          <span style={{'fontSize': '1.4em', 'color': 'white'}}>Анкеты объектов{router.route === '/' ? <>&nbsp;/&nbsp;Главная</> : <></>}{router.route === '/info' ? <>&nbsp;/&nbsp;Инструкция</> : <></>}</span>
         </div>
-        <Link href={'/info'}><i className="pi pi-info-circle" style={{'fontSize': '1.8em', 'color': 'white' }}></i></Link>
+        <Link href={'/info'} className={router.route === '/info' ? styles.disabledlink : ''}><i className="pi pi-info-circle" style={{'fontSize': '1.8em', 'color': router.route === '/info' ? 'lightgrey' : 'white' }}></i></Link>
       </nav>
       <main className={styles.main}>
         {children}

@@ -7,21 +7,12 @@ import { Column } from 'primereact/column'
 import { InputText } from 'primereact/inputtext'
 import { FilterMatchMode } from 'primereact/api'
         
-export default function Home () {
-  const [cards, setCards] = useState([])
+export default function Home ({cards}) {
   const [loading, setLoading] = useState(true)
   const [filters, setFilters] = useState({'global': { value: null, matchMode: FilterMatchMode.CONTAINS }})
   const [globalFilterValue, setGlobalFilterValue] = useState('')
 
-  useEffect(() => {
-    async function load() {
-      const response = await fetch(`${process.env.API_URL}/api/cards`)
-      const json = await response.json()
-      setCards(json)
-      setLoading(false)
-    }
-    load()
-  }, [])
+  useEffect(() => {if (cards && cards.length > 1) setTimeout(() => setLoading(false), 1000)},[])
 
   if (loading) {return (<Loader />)}
 
@@ -33,19 +24,22 @@ export default function Home () {
     setGlobalFilterValue(value)
   }
 
-  const renderHeader = () => {
+  const header = () => {
     return (
       <div className="flex justify-content-end">
         <span className='p-input-icon-left p-input-icon-right'>
           <i className="pi pi-search" />
           <InputText value={globalFilterValue} onChange={onGlobalFilterChange} placeholder="Поиск" />
-          <i className="pi pi-times" />
+          {globalFilterValue ? <><i className="pi pi-times" onClick={clearFilter} style={{cursor: 'pointer'}} /></> : <><i className="pi pi-times" style={{color: 'lightgrey'}} /></>}
         </span>
       </div>
     )
   }
 
-  const header = renderHeader()
+  const clearFilter = () => {
+    setFilters({'global': { value: null, matchMode: FilterMatchMode.CONTAINS }})
+    setGlobalFilterValue('')
+  }
 
   return (
     <MainLayout>
@@ -59,9 +53,10 @@ export default function Home () {
   )
 }
 
-// export const getServerSideProps = async () => {
-//   const response = await fetch(`${process.env.API_URL}/api/cards`)
-//   const cards = response.json()
-//   console.log(cards)
-//   return {props: JSON.parse(JSON.stringify(cards))}
-// }
+export async function getStaticProps() {
+  const res = await fetch(`${process.env.API_URL}/api/cards`)
+  if (res.status !== 404) {
+    const cards = await res.json()
+    return {props:{cards}}
+  } else {return {props: {}}}
+}
