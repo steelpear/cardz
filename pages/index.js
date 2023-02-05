@@ -56,14 +56,6 @@ export default function Home ({cards}) {
   )
 }
 
-// export async function getStaticProps() {
-//   const res = await fetch(`${process.env.API_URL}/api/cards`)
-//   if (res.status !== 404) {
-//     const cards = await res.json()
-//     return {props:{cards}}
-//   } else {return {props: {}}}
-// }
-
 export const getServerSideProps = async () => {
   const response = await fetch(`${process.env.API_URL}/api/cards`)
   const data = await response.json()
