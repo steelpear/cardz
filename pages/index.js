@@ -1,4 +1,5 @@
 import {useState, useEffect} from 'react'
+import { useRouter } from 'next/router'
 import styles from '@/styles/Home.module.css'
 import { Loader } from '../components/Loader'
 import {MainLayout} from '../components/MainLayout'
@@ -15,6 +16,8 @@ export default function Home ({cards}) {
   useEffect(() => {if (cards && cards.length > 1) setTimeout(() => setLoading(false), 1000)},[])
 
   if (loading) {return (<Loader />)}
+
+  const router = useRouter()
 
   const onGlobalFilterChange = (e) => {
     const value = e.target.value
@@ -44,7 +47,7 @@ export default function Home ({cards}) {
   return (
     <MainLayout>
       <main className={styles.main}>
-        <DataTable value={cards} size="small" stripedRows removableSort paginator responsiveLayout="scroll" paginatorTemplate="CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown" currentPageReportTemplate="Строки {first} - {last} из {totalRecords}" rows={50} rowsPerPageOptions={[50,100,cards.length]} filters={filters} filterDisplay="row" globalFilterFields={['name', 'city']} header={header} emptyMessage="Ничего не найдено." style={{'width': '95%'}}>
+        <DataTable value={cards} size="small" selectionMode="single" onSelectionChange={e => router.push(`/card/${e.value.hotel_id}`)} dataKey="_id"stripedRows removableSort paginator responsiveLayout="scroll" paginatorTemplate="CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown" currentPageReportTemplate="Строки {first} - {last} из {totalRecords}" rows={50} rowsPerPageOptions={[50,100,cards.length]} filters={filters} filterDisplay="row" globalFilterFields={['name', 'city']} header={header} emptyMessage="Ничего не найдено." style={{'width': '95%'}}>
           <Column field="name" header="Название объекта" sortable style={{'width': '70%'}}></Column>
           <Column field="city" header="Город / Регион" sortable style={{'width': '30%'}}></Column>
         </DataTable>
