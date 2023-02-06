@@ -1,4 +1,31 @@
 .main {
   padding: 1rem 2.5rem;
 }
+.tab {
+  white-space: nowrap;
+  display: inline-block;
+  padding: 0 6px;
+}
+.tabs_wrap {
+  position: fixed;
+  background: white;
+  padding: 10px 0;
+  top: 60px;
+  line-height: 1.5rem;
+}
+a.anchor {
+  display: block;
+  position: relative;
+  top: -175px;
+  visibility: hidden;
+}
+.non_active {
+  text-decoration: none;
+  color: indigo;
+  cursor: pointer;
+}
+.active {
+  text-decoration: underline;
+  color: red;
+}
   
