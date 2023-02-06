@@ -1,11 +1,8 @@
-import {useState, useEffect} from 'react'
 import {MainLayout} from '../../components/MainLayout'
-import { Link, animateScroll as scroll } from 'react-scroll'
+import { Link } from 'react-scroll'
 import styles from '@/styles/Card.module.css'
 
 export default function Card({card}) {
-  const [currentTab, setcurrentTab] = useState(0)
-
   return(
     <MainLayout>
       <main className={styles.main}>
@@ -15,7 +12,6 @@ export default function Card({card}) {
             {card.sections.map((section, index) => {
               return (
                 <div className={styles.tab} key={index}>
-                  {/* <Link href={`#${index}`} className={currentTab === index ? styles.active : styles.non_active} onClick={() => setcurrentTab(index)}>{section.tabName}</Link> */}
                   <Link
                     activeClass={styles.active}
                     className={styles.non_active}
@@ -24,7 +20,6 @@ export default function Card({card}) {
                     smooth={true}
                     offset={-160}
                     duration={500}
-                    onClick={() => setcurrentTab(index)}
                   >{section.tabName}</Link>
                 </div>
               )
@@ -33,7 +28,6 @@ export default function Card({card}) {
           <div>
             {card.sections.map((section, index) => {
               return (<div key={index}>
-                {/* <a id={`#${index}`} className={styles.anchor} /> */}
                 <div id={`#${index}`} style={{fontWeight: 'bold'}}>{section.sectionName}</div>
                 <div dangerouslySetInnerHTML={{__html: section.sectionText}} />
               </div>
@@ -41,7 +35,6 @@ export default function Card({card}) {
             })}
           </div>
         </> : <><div dangerouslySetInnerHTML={{__html: card.description}} /></>}
-        
       </main>
     </MainLayout>
   )
