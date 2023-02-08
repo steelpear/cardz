@@ -17,8 +17,8 @@ export function MainLayout({ children }) {
       </Head>
       <nav className={styles.nav}>
         <div>
-          <Link href={'/'} className={router.route === '/' ? styles.disabledlink : ''}><i className="pi pi-home mr-3" style={{'fontSize': '1.8em', 'color': router.route === '/' ? 'lightgrey' : 'white' }}></i></Link>
-          <span style={{'fontSize': '1.4em', 'color': 'white'}}>Анкеты объектов{router.route === '/' ? <>&nbsp;/&nbsp;Главная</> : <></>}{router.route === '/info' ? <>&nbsp;/&nbsp;Инструкция</> : <></>}</span>
+          <Link href={'/'} className={router.route === '/' ? styles.disabledlink : ''}><i className="pi pi-home" style={{'marginRight': '12px', 'fontSize': '1.8em', 'color': router.route === '/' ? 'lightgrey' : 'white' }}></i></Link>
+          <span style={{'fontSize': '1.4em', 'color': 'white'}}>Анкеты объектов{router.route === '/' ? <>&nbsp;/&nbsp;Главная</> : <></>}{router.route === '/info' ? <>&nbsp;/&nbsp;Инструкция</> : <></>}{router.route === '/card/[id]' ? <>&nbsp;/&nbsp;Карточка объекта</> : <></>}{router.route === '/edit/[id]' ? <>&nbsp;/&nbsp;Редактирование анкеты</> : <></>}</span>
         </div>
         <Link href={'/info'} className={router.route === '/info' ? styles.disabledlink : ''}><i className="pi pi-info-circle" style={{'fontSize': '1.8em', 'color': router.route === '/info' ? 'lightgrey' : 'white' }}></i></Link>
       </nav>

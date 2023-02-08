@@ -13,12 +13,6 @@
   top: 60px;
   line-height: 1.5rem;
 }
-a.anchor {
-  display: block;
-  position: relative;
-  top: -175px;
-  visibility: hidden;
-}
 .non_active {
   text-decoration: none;
   color: indigo;
@@ -27,5 +21,11 @@ a.anchor {
 .active {
   text-decoration: underline;
   color: red;
+}
+.float_btn {
+  position: fixed;
+  top: 80px;
+  right: 20px;
+  z-index: 1;
 }
   
