@@ -1,25 +1,22 @@
 .main {
-    padding: 1rem 2.5rem;
-  }
-  .tab {
-    white-space: nowrap;
-    display: inline-block;
-    padding: 0 6px;
-  }
-  .tabs_wrap {
-    position: fixed;
-    background: white;
-    padding: 10px 0;
-    top: 60px;
-    line-height: 1.5rem;
-  }
-  .non_active {
-    text-decoration: none;
-    color: indigo;
-    cursor: pointer;
-  }
-  .active {
-    text-decoration: underline;
-    color: red;
-  }
+  padding: 0 2.5rem 1rem;
+}
+.tab {
+  white-space: nowrap;
+  display: inline-block;
+  padding-right: 8px;
+}
+.non_active {
+  text-decoration: none;
+  color: indigo;
+  cursor: pointer;
+}
+.non_active:hover {
+  text-decoration: underline;
+}
+.active {
+  text-decoration: underline;
+  color: red;
+  cursor: pointer;
+}
     
