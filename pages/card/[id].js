@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
+import axios from 'axios'
 import {MainLayout} from '../../components/MainLayout'
 import { Link } from 'react-scroll'
 import { Button } from 'primereact/button'
@@ -73,8 +74,8 @@ export default function Card({card}) {
 
 export const getServerSideProps = async (context) => {
   const { id } = context.query
-  const response = await fetch(`${process.env.API_URL}/api/card`, {method: "POST", body: id})
-  const data = await response.json()
+  const response = await axios.post(`${process.env.API_URL}/api/card`, {id})
+  const data = response.data
   if (!data) {return {notFound: true}}
   return {props: {card: data}}
 }

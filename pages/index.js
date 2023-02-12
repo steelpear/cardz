@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
+import axios from 'axios'
 import styles from '@/styles/Home.module.css'
 import { Loader } from '../components/Loader'
 import { MainLayout } from '../components/MainLayout'
@@ -57,8 +58,8 @@ export default function Home ({cards}) {
 }
 
 export const getServerSideProps = async () => {
-  const response = await fetch(`${process.env.API_URL}/api/cards`)
-  const data = await response.json()
+  const response = await axios.get(`${process.env.API_URL}/api/cards`)
+  const data = response.data
   if (!data) {return {notFound: true}}
   return {props: {cards: data}}
 }

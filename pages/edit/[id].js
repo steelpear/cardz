@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/router'
+import axios from 'axios'
 import { MainLayout } from '../../components/MainLayout'
 import { Loader } from '../../components/Loader'
 import { Tabs } from '../../components/Tabs'
@@ -7,9 +8,11 @@ import { InputText } from 'primereact/inputtext'
 import { Button } from 'primereact/button'
 import { Dialog } from 'primereact/dialog'
 import { Tooltip } from 'primereact/tooltip'
+import { Toast } from 'primereact/toast'
 import styles from '@/styles/Edit.module.css'
 
 export default function Edit({oneCard}) {
+  const toast = useRef(null)
   const editorRef = useRef()
   const router = useRouter()
   const [card, setCard] = useState(oneCard)
@@ -64,6 +67,20 @@ export default function Edit({oneCard}) {
     setSectionContent('')
   }
 
+  const updateCard = async () => {
+    const copyCard = {...card}
+    const id = copyCard._id
+    const data = { name: cardName }
+    if (copyCard.sections && copyCard.sections.length > 0) {
+      copyCard.sections[currentTab].sectionText = sectionContent
+      data.sections = copyCard.sections
+    } else { data.description = sectionContent }
+    const response = await axios.post(`${process.env.API_URL}/api/update`, {id, data})
+    if (response.data.state === 'true') {
+      toast.current.show({ severity: 'success', summary: 'Сохранено', detail: 'Изменения сохранены' })
+    } else { toast.current.show({ severity: 'error', summary: 'Ошибка!', detail: 'Ошибка сохранения!' }) }
+  }
+
   return editorLoaded ? (
     <MainLayout>
       <main className={styles.main}>
@@ -73,7 +90,7 @@ export default function Edit({oneCard}) {
             {cardName ? <><i className="pi pi-times" onClick={() => setCardName('')} style={{cursor: 'pointer'}} /></> : <><i className="pi pi-times" style={{color: 'lightgrey'}} /></>}
           </span>
           <div>
-            <Button icon="pi pi-save" className="p-button-secondary p-button-rounded ml-2" aria-label="Save" onClick={() => console.log('Save')} tooltip="Сохранить изменения" tooltipOptions={{ position: 'top' }} />
+            <Button icon="pi pi-save" className="p-button-secondary p-button-rounded ml-2" aria-label="Save" onClick={() => updateCard()} tooltip="Сохранить изменения" tooltipOptions={{ position: 'top' }} />
             <Button disabled={card.sections && card.sections.length > 0 || sectionContent !== '' ? true : false} icon="pi pi-list" className="p-button-secondary p-button-rounded ml-2" aria-label="AddTabs" onClick={() => setCard(Tabs)} tooltip="Добавить разделы" tooltipOptions={{ position: 'top' }} />
             <Button disabled={card.sections && card.sections.length < 1 ? true : false} icon="pi pi-plus" className="p-button-secondary p-button-rounded ml-2" aria-label="Add" onClick={() => setNewTabDialog(true)} tooltip="Добавить раздел" tooltipOptions={{ position: 'top' }} />
             <Button disabled={card.sections && card.sections.length < 1 ? true : false} icon="pi pi-minus" className="p-button-secondary p-button-rounded ml-2" aria-label="Remove" onClick={() => deleteLastTab()} tooltip="Удалить последний раздел" tooltipOptions={{ position: 'top' }} />
@@ -113,6 +130,7 @@ export default function Edit({oneCard}) {
             <Button disabled={newTabName ? false : true} label="Добавить" onClick={() => addTab()} />
           </div>
         </Dialog>
+        <Toast ref={toast} />
       </main>
     </MainLayout>
   ) : (<MainLayout><div>Editor loading...</div></MainLayout>)
@@ -120,8 +138,8 @@ export default function Edit({oneCard}) {
 
 export const getServerSideProps = async (context) => {
   const { id } = context.query
-  const response = await fetch(`${process.env.API_URL}/api/card`, {method: "POST", body: id})
-  const data = await response.json()
+  const response = await axios.post(`${process.env.API_URL}/api/card`, {id})
+  const data = response.data
   if (!data) {return {notFound: true}}
   return {props: {oneCard: data}}
 }
