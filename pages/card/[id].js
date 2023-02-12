@@ -28,7 +28,7 @@ export default function Card({card}) {
   return !isCard ? (
     <MainLayout>
       <main className={styles.main}>
-      <Button icon="pi pi-file-edit" className={['p-button-rounded p-button-lg', styles.float_btn]} aria-label="Edit" onClick={() => router.push(`/edit/${card._id}`)} />
+      <Button icon="pi pi-file-edit" className={['p-button-rounded p-button-lg', styles.float_btn]} aria-label="Edit" onClick={() => router.push(`/edit/${card.hotel_id}`)} />
         <h1 style={{textAlign:'center', marginTop: '65px'}}>{card.name}</h1>
         {card.sections && card.sections.length > 0 ? <>
           <div className={styles.tabs_wrap}>
@@ -62,7 +62,7 @@ export default function Card({card}) {
     </MainLayout>
   ) : (<MainLayout>
         <Dialog header="Анкета не найдена!" headerStyle={{textAlign: 'center'}} visible={isCard} closable=
-        {false} modal={false} style={{ width: '35vw' }}>
+        {false} style={{ width: '35vw' }}>
           <div className="card flex justify-content-between align-items-center">
             <Button label="К списку анкет" onClick={() => router.push('/')} />
             <Button label="Создать анкету" />
