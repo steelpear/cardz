@@ -104,13 +104,13 @@ export default function Edit({oneCard}) {
             // onReady={ editor => {console.log( 'Editor is ready to use!', editor )}}
           />
         </div>
-        <Dialog header="Новый раздел" headerStyle={{textAlign: 'center'}} visible={newTabDialog} style={{ width: '35vw' }} onHide={() => setNewTabDialog(false)}>
+        <Dialog header="Новый раздел" headerStyle={{textAlign: 'center'}} visible={newTabDialog} style={{ width: '30vw' }} onHide={() => setNewTabDialog(false)}>
           <div className="card flex justify-content-center align-items-center mb-3" style={{flexDirection: 'column'}}>
-            <InputText placeholder="Название вкладки" value={newTabName} onChange={(e) => setNewTabName(e.target.value)} className="mb-3" />
-            <InputText placeholder="Название раздела" value={newPartName} onChange={(e) => setNewPartName(e.target.value)}/>
+            <InputText placeholder="Название вкладки" value={newTabName} onChange={(e) => setNewTabName(e.target.value)} className="mb-3" style={{width: '300px'}} />
+            <InputText placeholder="Название раздела" value={newPartName} onChange={(e) => setNewPartName(e.target.value)} style={{width: '300px'}} />
           </div>
           <div className="card flex justify-content-end align-items-center">
-            <Button disabled={newTabName ? false : true} label="Ok" onClick={() => addTab()} />
+            <Button disabled={newTabName ? false : true} label="Добавить" onClick={() => addTab()} />
           </div>
         </Dialog>
       </main>
