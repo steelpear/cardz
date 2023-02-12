@@ -2,8 +2,10 @@ import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/router'
 import { MainLayout } from '../../components/MainLayout'
 import { Loader } from '../../components/Loader'
+import { Tabs } from '../../components/Tabs'
 import { InputText } from 'primereact/inputtext'
 import { Button } from 'primereact/button'
+import { Dialog } from 'primereact/dialog'
 import { Tooltip } from 'primereact/tooltip'
 import styles from '@/styles/Edit.module.css'
 
@@ -17,6 +19,9 @@ export default function Edit({oneCard}) {
   const [sectionContent, setSectionContent] = useState('')
   const [currentTab, setcurrentTab] = useState(0)
   const [cardName, setCardName] = useState('')
+  const [newTabName, setNewTabName] = useState('')
+  const [newPartName, setNewPartName] = useState('')
+  const [newTabDialog, setNewTabDialog] = useState(false)
 
   useEffect(() => {
     if (card) setTimeout(() => setLoading(false), 1000)
@@ -46,8 +51,11 @@ export default function Edit({oneCard}) {
 
   const addTab = () => {
     const copyCard = {...card}
-    copyCard.sections.push({tabName:'Новая секция', sectionName:'Новая', sectionText: ''})
+    copyCard.sections.push({tabName:newTabName, sectionName:newPartName ? newPartName : newTabName, sectionText: ''})
+    setNewTabDialog(false)
     setCard(copyCard)
+    setNewTabName('')
+    setNewPartName('')
   }
 
   const clearCard = () => {
@@ -56,24 +64,19 @@ export default function Edit({oneCard}) {
     setSectionContent('')
   }
 
-  const addTabs = () => {
-    const copyCard = {description: '', sections:[{ tabName: 'Название', sectionName: 'НАЗВАНИЕ ОР', sectionText: '' }, { tabName: 'Описание', sectionName: 'ОПИСАНИЕ ОР', sectionText: '' }, { tabName: 'Адрес', sectionName: 'АДРЕС ОР', sectionText: '' }, { tabName: 'Режим работы', sectionName: 'РЕЖИМ РАБОТЫ ОР', sectionText: '' }, { tabName: 'Заезд/Выезд', sectionName: 'ВРЕМЯ ЗАЕЗДА/ВЫЕЗДА', sectionText: '' }, { tabName: 'Юридическое название', sectionName: 'ЮРИДИЧЕСКОЕ НАЗВАНИЕ ОР/ИНН', sectionText: '' }, { tabName: 'Взаиморасчёты', sectionName: 'ВАРИАНТЫ ВЗАИМОРАСЧЁТОВ ', sectionText: '' }, { tabName: 'Условия бронирования', sectionName: 'УСЛОВИЯ БРОНИРОВАНИЯ ОР/АВ /РАСЧЕТ ДНИ/НОЧИ(СУТКИ)/УСЛОВИЯ ПОЛУЧЕНИЯ ОПЛАТЫ ОТ КЛИЕНТА', sectionText: '' }, { tabName: 'Специфика расчёта', sectionName: 'СПЕЦИФИКА РАСЧЕТА АВ', sectionText: '' }, { tabName: 'Специфика выставления', sectionName: 'СПЕЦИФИКА ВЫСТАВЛЕНИЯ СЧЕТА ОТ ОР, РАСЧЕТ ЗАКУПОЧНОЙ ЦЕНЫ', sectionText: '' }, { tabName: 'Дети', sectionName: 'МИНИМАЛЬНЫЙ ВОЗРАСТ ДЕТЕЙ ПРИ БРОНИРОВАНИИ/ОПЛАТА ДЕТСКИХ МЕСТ И ДОПОЛНИТЕЛЬНЫХ МЕСТ ПРИ БРОНИРОВАНИИ ОР', sectionText: '' }, { tabName: 'Питание', sectionName: 'ПИТАНИЕ В ОР /ТИПЫ ПИТАНИЯ', sectionText: '' }, { tabName: 'Животные', sectionName: 'РАЗМЕЩЕНИЕ С ЖИВОТНЫМИ', sectionText: '' }, { tabName: 'Доступная среда', sectionName: 'УСЛОВИЯ ДЛЯ ЛИЦ С ОГРАНИЧЕННЫМИ ВОЗМОЖНОСТЯМИ(ДОСТУПНАЯ СРЕДА)', sectionText: '' }, { tabName: 'Аннуляция', sectionName: 'УСЛОВИЯ АННУЛЯЦИИ ПРИ БРОНИРОВАНИИ В ОР', sectionText: '' }, { tabName: 'Договор', sectionName: 'ДОГОВОР /СРОК ДЕЙСТВИЯ ДОГОВОРА', sectionText: '' }, { tabName: 'Инфраструктура', sectionName: 'ИНФРАСТРУКТУРА ОБЪЕКТА РАЗМЕЩЕНИЯ', sectionText: '' }, { tabName: 'Как добраться', sectionName: 'КАК ДОБРАТЬСЯ ДО ОБЪЕКТА РАЗМЕЩЕНИЯ', sectionText: '' }, { tabName: 'Номера', sectionName: 'НОМЕРНОЙ ФОНД /КАТЕГОРИИ НОМЕРОВ ОР', sectionText: '' }, { tabName: 'Контакты', sectionName: 'КОНТАКТНАЯ ИНФОРМАЦИЯ ПО ОР /ТЕЛ ОР/АДРЕС ЭЛ ПОЧТЫ ОР', sectionText: '' }, { tabName: 'Важная информация', sectionName: 'ВАЖНАЯ ИНФОРМАЦИЯ ОБ ОБЪЕКТЕ РАЗМЕЩЕНИЯ', sectionText: '' }]}
-    setCard(copyCard)
-  }
-
   return editorLoaded ? (
     <MainLayout>
       <main className={styles.main}>
         <div className="card flex justify-content-between align-items-center mb-2">
-          <span className='flex p-input-icon-right'>
-            <InputText value={cardName} onChange={(e) => setCardName(e.target.value)} />
+          <span className='p-input-icon-right'>
+            <InputText value={cardName} onChange={(e) => setCardName(e.target.value)} className={styles.inputtext} />
             {cardName ? <><i className="pi pi-times" onClick={() => setCardName('')} style={{cursor: 'pointer'}} /></> : <><i className="pi pi-times" style={{color: 'lightgrey'}} /></>}
           </span>
           <div>
             <Button icon="pi pi-save" className="p-button-secondary p-button-rounded ml-2" aria-label="Save" onClick={() => console.log('Save')} tooltip="Сохранить изменения" tooltipOptions={{ position: 'top' }} />
-            <Button disabled={card.sections.length > 0 ? true : false} icon="pi pi-list" className="p-button-secondary p-button-rounded ml-2" aria-label="AddTabs" onClick={() => addTabs()} tooltip="Добавить разделы" tooltipOptions={{ position: 'top' }} />
-            <Button icon="pi pi-plus" className="p-button-secondary p-button-rounded ml-2" aria-label="Add" onClick={() => addTab()} tooltip="Добавить раздел" tooltipOptions={{ position: 'top' }} />
-            <Button icon="pi pi-minus" className="p-button-secondary p-button-rounded ml-2" aria-label="Remove" onClick={() => deleteLastTab()} tooltip="Удалить последний раздел" tooltipOptions={{ position: 'top' }} />
+            <Button disabled={card.sections.length > 0 || sectionContent !== '' ? true : false} icon="pi pi-list" className="p-button-secondary p-button-rounded ml-2" aria-label="AddTabs" onClick={() => setCard(Tabs)} tooltip="Добавить разделы" tooltipOptions={{ position: 'top' }} />
+            <Button disabled={card.sections.length < 1 ? true : false} icon="pi pi-plus" className="p-button-secondary p-button-rounded ml-2" aria-label="Add" onClick={() => setNewTabDialog(true)} tooltip="Добавить раздел" tooltipOptions={{ position: 'top' }} />
+            <Button disabled={card.sections.length < 1 ? true : false} icon="pi pi-minus" className="p-button-secondary p-button-rounded ml-2" aria-label="Remove" onClick={() => deleteLastTab()} tooltip="Удалить последний раздел" tooltipOptions={{ position: 'top' }} />
             <Button icon="pi pi-times" className="p-button-secondary p-button-rounded ml-2" aria-label="Clear" onClick={() => clearCard()} tooltip="Очистить анкету" tooltipOptions={{ position: 'top' }} />
             <Button icon="pi pi-trash" className="p-button-secondary p-button-rounded ml-2" aria-label="Delete" onClick={() => console.log('Delete')} tooltip="Удалить анкету" tooltipOptions={{ position: 'top' }} />
             <Button icon="pi pi-arrow-left" className="p-button-secondary p-button-rounded ml-2" aria-label="Back" onClick={() => router.back()} tooltip="Назад" tooltipOptions={{ position: 'top' }} />
@@ -94,14 +97,25 @@ export default function Edit({oneCard}) {
           <CKEditor
             editor={ Editor  }
             data={ sectionContent }
-            onReady={ editor => {console.log( 'Editor is ready to use!', editor )}}
-            onBlur={ ( event, editor ) => {console.log( 'Blur.', editor )}}
-            onFocus={ ( event, editor ) => {console.log( 'Focus.', editor )}}
+            onChange={(event, editor) => {
+              const data = editor.getData()
+              setSectionContent(data)
+            }}
+            // onReady={ editor => {console.log( 'Editor is ready to use!', editor )}}
           />
         </div>
+        <Dialog header="Новый раздел" headerStyle={{textAlign: 'center'}} visible={newTabDialog} style={{ width: '35vw' }} onHide={() => setNewTabDialog(false)}>
+          <div className="card flex justify-content-center align-items-center mb-3" style={{flexDirection: 'column'}}>
+            <InputText placeholder="Название вкладки" value={newTabName} onChange={(e) => setNewTabName(e.target.value)} className="mb-3" />
+            <InputText placeholder="Название раздела" value={newPartName} onChange={(e) => setNewPartName(e.target.value)}/>
+          </div>
+          <div className="card flex justify-content-end align-items-center">
+            <Button disabled={newTabName ? false : true} label="Ok" onClick={() => addTab()} />
+          </div>
+        </Dialog>
       </main>
     </MainLayout>
-  ) : (<MainLayout><div>Editor loading</div></MainLayout>)
+  ) : (<MainLayout><div>Editor loading...</div></MainLayout>)
 }
 
 export const getServerSideProps = async (context) => {
