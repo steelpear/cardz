@@ -25,6 +25,7 @@ export default function Edit({oneCard}) {
   const [newTabName, setNewTabName] = useState('')
   const [newPartName, setNewPartName] = useState('')
   const [newTabDialog, setNewTabDialog] = useState(false)
+  const [confirm, setConfirm] = useState(false)
 
   useEffect(() => {
     if (card) setTimeout(() => setLoading(false), 1000)
@@ -40,6 +41,13 @@ export default function Edit({oneCard}) {
   },[])
 
   if (loading) {return (<Loader />)}
+
+  const footerContent = (
+    <div className="card flex justify-content-between align-items-center">
+      <Button label="Отмена" icon="pi pi-times" onClick={() => setConfirm(false)} className="p-button-success" />
+      <Button label="Удалить" icon="pi pi-check" onClick={() => deleteCard()} autoFocus className="p-button-danger" />
+    </div>
+  )
 
   const selectTab = (index) => {
     setcurrentTab(index)
@@ -81,6 +89,16 @@ export default function Edit({oneCard}) {
     } else { toast.current.show({ severity: 'error', summary: 'Ошибка!', detail: 'Ошибка сохранения!' }) }
   }
 
+  const deleteCard = async () => {
+    const response = await axios.post(`${process.env.API_URL}/api/delete`,{id: card._id})
+    if (response.data.state === 'Deleted') {
+      toast.current.show({ severity: 'success', summary: 'Удалено', detail: 'Анкета удалена' })
+      setConfirm(false)
+      setLoading(true)
+      setTimeout(() => router.push('/'), 500)
+    } else { toast.current.show({ severity: 'error', summary: 'Ошибка!', detail: 'Ошибка удаления!' }) }
+  }
+
   return editorLoaded ? (
     <MainLayout>
       <main className={styles.main}>
@@ -95,7 +113,7 @@ export default function Edit({oneCard}) {
             <Button disabled={card.sections && card.sections.length < 1 ? true : false} icon="pi pi-plus" className="p-button-secondary p-button-rounded ml-2" aria-label="Add" onClick={() => setNewTabDialog(true)} tooltip="Добавить раздел" tooltipOptions={{ position: 'top' }} />
             <Button disabled={card.sections && card.sections.length < 1 ? true : false} icon="pi pi-minus" className="p-button-secondary p-button-rounded ml-2" aria-label="Remove" onClick={() => deleteLastTab()} tooltip="Удалить последний раздел" tooltipOptions={{ position: 'top' }} />
             <Button icon="pi pi-times" className="p-button-secondary p-button-rounded ml-2" aria-label="Clear" onClick={() => clearCard()} tooltip="Очистить анкету" tooltipOptions={{ position: 'top' }} />
-            <Button icon="pi pi-trash" className="p-button-secondary p-button-rounded ml-2" aria-label="Delete" onClick={() => console.log('Delete')} tooltip="Удалить анкету" tooltipOptions={{ position: 'top' }} />
+            <Button icon="pi pi-trash" className="p-button-secondary p-button-rounded ml-2" aria-label="Delete" onClick={() => setConfirm(true)} tooltip="Удалить анкету" tooltipOptions={{ position: 'top' }} />
             <Button icon="pi pi-arrow-left" className="p-button-secondary p-button-rounded ml-2" aria-label="Back" onClick={() => router.back()} tooltip="Назад" tooltipOptions={{ position: 'top' }} />
           </div>
         </div>
@@ -129,6 +147,9 @@ export default function Edit({oneCard}) {
           <div className="card flex justify-content-end align-items-center">
             <Button disabled={newTabName ? false : true} label="Добавить" onClick={() => addTab()} />
           </div>
+        </Dialog>
+        <Dialog header="Подтвердите удаление" headerStyle={{textAlign: 'center'}} visible={confirm} style={{ width: '35vw' }} onHide={() => setConfirm(false)} footer={footerContent}>
+          <p className="m-0" style={{fontSize: '20px'}}>Вы уверены, что хотите удалить анкету объекта <span style={{fontWeight: 'bold'}}>{card.name}</span>?</p>
         </Dialog>
         <Toast ref={toast} />
       </main>

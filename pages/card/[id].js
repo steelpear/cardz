@@ -28,6 +28,8 @@ export default function Card({card}) {
   if (loading) {return (<Loader />)}
 
   const createCard = async () => {
+    setIsCard(false)
+    setLoading(true)
     const {id} = router.query
     const hotel = await axios.post(`${process.env.API_URL}/api/hotel`,{id})
     const city = await axios.post(`${process.env.API_URL}/api/city`,{id: hotel.data.city.pop()})
