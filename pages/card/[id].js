@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import axios from 'axios'
 import {MainLayout} from '../../components/MainLayout'
+import { Tabs } from '../../components/Tabs'
 import { Link } from 'react-scroll'
 import { Button } from 'primereact/button'
 import { Dialog } from 'primereact/dialog'
@@ -25,6 +26,21 @@ export default function Card({card}) {
   },[])
 
   if (loading) {return (<Loader />)}
+
+  const createCard = async () => {
+    const {id} = router.query
+    const hotel = await axios.post(`${process.env.API_URL}/api/hotel`,{id})
+    const city = await axios.post(`${process.env.API_URL}/api/city`,{id: hotel.data.city.pop()})
+    const response = await axios.post(`${process.env.API_URL}/api/create`, {
+      name: hotel.data.name,
+      hotel_id: hotel.data._id,
+      description: '',
+      sections: Tabs.sections,
+      city: city.data.name,
+      active: true
+    })
+    router.push(`/edit/${response.data}`)
+  }
 
   return !isCard ? (
     <MainLayout>
@@ -66,7 +82,7 @@ export default function Card({card}) {
         {false} style={{ width: '35vw' }}>
           <div className="card flex justify-content-between align-items-center">
             <Button label="К списку анкет" onClick={() => router.push('/')} />
-            <Button label="Создать анкету" />
+            <Button label="Создать анкету" onClick={() => createCard()} />
           </div>
         </Dialog>
       </MainLayout>)
