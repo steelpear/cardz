@@ -3,7 +3,7 @@ const nextConfig = {
   reactStrictMode: true,
   env: {
     MONGODB_URL: "mongodb://root:5WyJKW2gPkmA@185.151.240.199:31017/portal?authSource=admin",
-    API_URL: "http://localhost:3000"
+    API_URL: process.env.NODE_ENV === 'production' ? "" : "http://localhost:3000"
   }
 }
 
