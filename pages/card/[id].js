@@ -7,10 +7,6 @@ import { Link } from 'react-scroll'
 import { Button } from 'primereact/button'
 import { Dialog } from 'primereact/dialog'
 import { Loader } from '../../components/Loader'
-import 'primereact/resources/themes/lara-light-indigo/theme.css'
-import 'primereact/resources/primereact.css'
-import 'primeicons/primeicons.css'
-import 'primeflex/primeflex.css'
 import styles from '@/styles/Card.module.css'
 
 export default function Card({card}) {

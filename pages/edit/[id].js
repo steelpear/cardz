@@ -9,10 +9,12 @@ import { Button } from 'primereact/button'
 import { Dialog } from 'primereact/dialog'
 import { Tooltip } from 'primereact/tooltip'
 import { Toast } from 'primereact/toast'
+import { ContextMenu } from 'primereact/contextmenu'
 import styles from '@/styles/Edit.module.css'
 
 export default function Edit({oneCard}) {
   const toast = useRef(null)
+  const cm = useRef(null)
   const editorRef = useRef()
   const router = useRouter()
   const [card, setCard] = useState(oneCard)
@@ -60,6 +62,13 @@ export default function Edit({oneCard}) {
     setCard(copyCard)
   }
 
+  const deleteOneTab = async () => {
+    const copyCard = await {...card}
+    await copyCard.sections.splice(currentTab, 1)
+    setCard(copyCard)
+    await toast.current.show({ severity: 'success', summary: 'Удалено', detail: 'Раздел удалён', life: 3000 })
+  }
+
   const addTab = () => {
     const copyCard = {...card}
     copyCard.sections.push({tabName:newTabName, sectionName:newPartName ? newPartName : newTabName, sectionText: ''})
@@ -99,6 +108,18 @@ export default function Edit({oneCard}) {
     } else { toast.current.show({ severity: 'error', summary: 'Ошибка!', detail: 'Ошибка удаления!' }) }
   }
 
+  const cmItems = [
+    {
+      label: 'Редактировать',
+      icon: 'pi pi-fw pi-file-edit'
+    },
+    {
+      label: 'Удалить',
+      icon: 'pi pi-fw pi-trash',
+      command: () => {deleteOneTab()}
+    }
+  ]
+
   return editorLoaded ? (
     <MainLayout>
       <main className={styles.main}>
@@ -122,7 +143,7 @@ export default function Edit({oneCard}) {
             {card.sections.map((section, index) => {
               return (
                 <div className={styles.tab} key={index}>
-                  <span className={currentTab === index ? styles.active : styles.non_active} onClick={() => selectTab(index)}>{section.tabName}</span>
+                  <span className={currentTab === index ? styles.active : styles.non_active} onClick={() => selectTab(index)} onContextMenu={(e) => cm.current.show(e)}>{section.tabName}</span>
                 </div>
               )
             })}
@@ -152,9 +173,10 @@ export default function Edit({oneCard}) {
           <p className="m-0" style={{fontSize: '20px'}}>Вы уверены, что хотите удалить анкету объекта <span style={{fontWeight: 'bold'}}>{card.name}</span>?</p>
         </Dialog>
         <Toast ref={toast} />
+        <ContextMenu model={cmItems} ref={cm} />
       </main>
     </MainLayout>
-  ) : (<MainLayout><div>Editor loading...</div></MainLayout>)
+  ) : (<MainLayout><div>Редактор загружается...</div></MainLayout>)
 }
 
 export const getServerSideProps = async (context) => {
