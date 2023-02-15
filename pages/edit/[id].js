@@ -27,7 +27,9 @@ export default function Edit({oneCard}) {
   const [newTabName, setNewTabName] = useState('')
   const [newPartName, setNewPartName] = useState('')
   const [newTabDialog, setNewTabDialog] = useState(false)
+  const [editTabDialog, setEditTabDialog] = useState(false)
   const [confirm, setConfirm] = useState(false)
+  const [mode, setMode] = useState('new')
 
   useEffect(() => {
     if (card) setTimeout(() => setLoading(false), 1000)
@@ -71,11 +73,34 @@ export default function Edit({oneCard}) {
 
   const addTab = () => {
     const copyCard = {...card}
-    copyCard.sections.push({tabName:newTabName, sectionName:newPartName ? newPartName : newTabName, sectionText: ''})
+    if (mode === 'before') {copyCard.sections.splice(currentTab, 0, {tabName:newTabName, sectionName:newPartName ? newPartName : newTabName, sectionText: ''})}
+    if (mode === 'after') {copyCard.sections.splice(currentTab + 1, 0, {tabName:newTabName, sectionName:newPartName ? newPartName : newTabName, sectionText: ''})}
+    if (mode === 'new') {copyCard.sections.push({tabName:newTabName, sectionName:newPartName ? newPartName : newTabName, sectionText: ''})}
+    if (mode === 'edit') {
+      copyCard.sections[currentTab].tabName = newTabName
+      copyCard.sections[currentTab].sectionName = newPartName
+      setEditTabDialog(false)
+    }
     setNewTabDialog(false)
     setCard(copyCard)
     setNewTabName('')
     setNewPartName('')
+    setMode('new')
+  }
+
+  const editTab = () => {
+    const copyCard = {...card}
+    setNewTabName(copyCard.sections[currentTab].tabName)
+    setNewPartName(copyCard.sections[currentTab].sectionName)
+    setEditTabDialog(true)
+    setMode('edit')
+  }
+
+  const closeEditTabDialog = () => {
+    setEditTabDialog(false)
+    setNewTabName('')
+    setNewPartName('')
+    setMode('new')
   }
 
   const clearCard = () => {
@@ -111,7 +136,24 @@ export default function Edit({oneCard}) {
   const cmItems = [
     {
       label: 'Редактировать',
-      icon: 'pi pi-fw pi-file-edit'
+      icon: 'pi pi-fw pi-file-edit',
+      command: () => {editTab()}
+    },
+    {
+      label: 'Вставить до',
+      icon: 'pi pi-fw pi-chevron-left',
+      command: () => {
+        setMode('before')
+        setNewTabDialog(true)
+      }
+    },
+    {
+      label: 'Вставить после',
+      icon: 'pi pi-fw pi-chevron-right',
+      command: () => {
+        setMode('after')
+        setNewTabDialog(true)
+      }
     },
     {
       label: 'Удалить',
@@ -143,7 +185,7 @@ export default function Edit({oneCard}) {
             {card.sections.map((section, index) => {
               return (
                 <div className={styles.tab} key={index}>
-                  <span className={currentTab === index ? styles.active : styles.non_active} onClick={() => selectTab(index)} onContextMenu={(e) => cm.current.show(e)}>{section.tabName}</span>
+                  {currentTab === index ? <span className={currentTab === index ? styles.active : styles.non_active} onClick={() => selectTab(index)} onContextMenu={(e) => cm.current.show(e)}>{section.tabName}</span> : <span className={currentTab === index ? styles.active : styles.non_active} onClick={() => selectTab(index)}>{section.tabName}</span>}
                 </div>
               )
             })}
@@ -155,8 +197,7 @@ export default function Edit({oneCard}) {
             data={ sectionContent }
             onChange={(event, editor) => {
               const data = editor.getData()
-              setSectionContent(data)
-            }}
+              setSectionContent(data)}}
             // onReady={ editor => {console.log( 'Editor is ready to use!', editor )}}
           />
         </div>
@@ -167,6 +208,15 @@ export default function Edit({oneCard}) {
           </div>
           <div className="card flex justify-content-end align-items-center">
             <Button disabled={newTabName ? false : true} label="Добавить" onClick={() => addTab()} />
+          </div>
+        </Dialog>
+        <Dialog header="Редактировать раздел" headerStyle={{textAlign: 'center'}} visible={editTabDialog} style={{ width: '30vw' }} onHide={() => closeEditTabDialog()}>
+          <div className="card flex justify-content-center align-items-center mb-3" style={{flexDirection: 'column'}}>
+            <InputText placeholder="Название вкладки" value={newTabName} onChange={(e) => setNewTabName(e.target.value)} className="mb-3" style={{width: '300px'}} />
+            <InputText placeholder="Название раздела" value={newPartName} onChange={(e) => setNewPartName(e.target.value)} style={{width: '300px'}} />
+          </div>
+          <div className="card flex justify-content-end align-items-center">
+            <Button disabled={newTabName ? false : true} label="Сохранить" onClick={() => addTab()} />
           </div>
         </Dialog>
         <Dialog header="Подтвердите удаление" headerStyle={{textAlign: 'center'}} visible={confirm} style={{ width: '35vw' }} onHide={() => setConfirm(false)} footer={footerContent}>

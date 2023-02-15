@@ -39,7 +39,7 @@ export default function Auth() {
                 <i className="pi pi-user" />
               </span>
             </div>
-            <Button label="Войти" icon="pi pi-check" onClick={() => checkLogin()} className="p-button-success p-button-raised mt-3" style={{width: 'inherit'}} />
+            <Button disabled={login ? false : true} label="Войти" icon="pi pi-check" onClick={() => checkLogin()} className="p-button-success p-button-raised mt-3" style={{width: 'inherit'}} />
           </div>
         </div>
         <Toast ref={toast} />
