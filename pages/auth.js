@@ -15,9 +15,13 @@ export default function Auth() {
 
   useEffect(() => {setHeight(window.innerHeight - 30)}, [])
 
-  const checkLogin = () => {
-    Cookies.set('_qHWj5dMs-p27yKjuy', login, { expires: 7 })
-    setTimeout(() => router.push('/'), 500)
+  const checkLogin = async () => {
+    const user = await axios.post('http://portal/api/Mobile/check', {login})
+    if (user.data && user.data.user === login) {
+      Cookies.set('_qHWj5dMs-p27yKjuy', login, { expires: 30 })
+      toast.current.show({ severity: 'success', summary: 'Удачно!', detail: 'Вы авторизованы.' })
+      setTimeout(() => router.push('/'), 500)
+    } else {toast.current.show({ severity: 'error', summary: 'Ошибка!', detail: 'Ошибка авторизации!' })}
   }
 
   if (height) {
