@@ -11,10 +11,7 @@ export function MainLayout({ children }) {
   const router = useRouter()
   const [user, setUser] = useState('')
 
-  useEffect(() => {
-   const getUser = Cookies.get('_qHWj5dMs-p27yKjuy')
-   setUser(getUser)
-  }, [])
+  useEffect(() => {setUser(Cookies.get('_qHWj5dMs-p27yKjuy'))}, [])
 
   return (
     <>

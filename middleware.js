@@ -6,5 +6,8 @@ export default function middleware(req){
   const _url = process.env.API_URL
 
   if(!verify && url === `${_url}/`){return NextResponse.redirect(`${_url}/auth`)}
+  if(!verify && url === `${_url}/info`){return NextResponse.redirect(`${_url}/auth`)}
+  if(!verify && url.includes('/card')){return NextResponse.redirect(`${_url}/auth`)}
+  if(!verify && url.includes('/edit')){return NextResponse.redirect(`${_url}/auth`)}
   if (verify && url.includes('/auth')) {return NextResponse.redirect(`${_url}/`)}
 }
