@@ -3,6 +3,7 @@ import { useRouter } from 'next/router'
 import axios from 'axios'
 import {MainLayout} from '../../components/MainLayout'
 import { Tabs } from '../../components/Tabs'
+import { EventBus } from '../../components/EventBus'
 import { Link } from 'react-scroll'
 import { Button } from 'primereact/button'
 import { Dialog } from 'primereact/dialog'
@@ -19,6 +20,7 @@ export default function Card({card}) {
       setIsCard(true)
       setTimeout(() => setLoading(false), 1000)
     } else {setTimeout(() => setLoading(false), 1000)}
+    setTimeout(() => EventBus.$emit('card', card.name), 1100)
   },[])
 
   if (loading) {return (<Loader />)}

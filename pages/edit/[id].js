@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/router'
 import axios from 'axios'
 import { MainLayout } from '../../components/MainLayout'
+import { EventBus } from '../../components/EventBus'
 import { Loader } from '../../components/Loader'
 import { Tabs } from '../../components/Tabs'
 import { InputText } from 'primereact/inputtext'
@@ -42,6 +43,7 @@ export default function Edit({oneCard}) {
     }
     setEditorLoaded(true)
     setCardName(card.name)
+    setTimeout(() => EventBus.$emit('card', card.name), 1100)
   },[])
 
   if (loading) {return (<Loader />)}
