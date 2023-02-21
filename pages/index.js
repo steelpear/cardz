@@ -14,7 +14,7 @@ export default function Home ({cards}) {
   const [filters, setFilters] = useState({'global': { value: null, matchMode: FilterMatchMode.CONTAINS }})
   const [globalFilterValue, setGlobalFilterValue] = useState('')
 
-  useEffect(() => {if (cards && cards.length > 1) setTimeout(() => setLoading(false), 1000)},[])
+  useEffect(() => {if (cards && cards.length > 1) {setTimeout(() => setLoading(false), 1000)}},[])
 
   if (loading) {return (<Loader />)}
 
@@ -57,7 +57,7 @@ export default function Home ({cards}) {
   )
 }
 
-export const getServerSideProps = async () => {
+export const getServerSideProps = async (context) => {
   const response = await axios.get(`${process.env.API_URL}/api/cards`)
   const data = response.data
   if (!data) {return {notFound: true}}

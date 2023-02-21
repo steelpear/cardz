@@ -16,6 +16,7 @@ export function MainLayout({ children }) {
   useEffect(() => {
     setUser(Cookies.get('_qHWj5dMs-p27yKjuy'))
     EventBus.$on('card', (value) => setObject(value))
+    return () => {EventBus.$off('card')}
   }, [])
 
   return (
