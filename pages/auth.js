@@ -16,7 +16,7 @@ export default function Auth() {
   useEffect(() => {setHeight(window.innerHeight - 30)}, [])
 
   const checkLogin = async () => {
-    const user = await axios.post(`${process.env.PORTAL_URL}/api/Mobile/check`, {login})
+    const user = await axios.post('https://broniryem.ru/api/Mobile/check', {login})
     if (user.data && user.data.user === login) {
       Cookies.set('_qHWj5dMs-p27yKjuy', login, { expires: 30 })
       toast.current.show({ severity: 'success', summary: 'Удачно!', detail: 'Вы авторизованы.' })

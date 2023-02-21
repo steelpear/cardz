@@ -60,24 +60,24 @@ export default function Edit({oneCard}) {
     setSectionContent(card.sections[index].sectionText)
   }
 
-  const deleteLastTab = () => {
-    const copyCard = {...card}
-    copyCard.sections.pop()
-    setCard(copyCard)
-  }
-
   const deleteOneTab = async () => {
     const copyCard = await {...card}
     await copyCard.sections.splice(currentTab, 1)
     setCard(copyCard)
+    selectTab(currentTab)
     await toast.current.show({ severity: 'success', summary: 'Удалено', detail: 'Раздел удалён', life: 3000 })
   }
 
   const addTab = () => {
     const copyCard = {...card}
-    if (mode === 'before') {copyCard.sections.splice(currentTab, 0, {tabName:newTabName, sectionName:newPartName ? newPartName : newTabName, sectionText: ''})}
-    if (mode === 'after') {copyCard.sections.splice(currentTab + 1, 0, {tabName:newTabName, sectionName:newPartName ? newPartName : newTabName, sectionText: ''})}
-    if (mode === 'new') {copyCard.sections.push({tabName:newTabName, sectionName:newPartName ? newPartName : newTabName, sectionText: ''})}
+    if (mode === 'before') {
+      copyCard.sections.splice(currentTab, 0, {tabName:newTabName, sectionName:newPartName ? newPartName : newTabName, sectionText: ''})
+      setSectionContent('')}
+    if (mode === 'after') {
+      copyCard.sections.splice(currentTab + 1, 0, {tabName:newTabName, sectionName:newPartName ? newPartName : newTabName, sectionText: ''})
+      setSectionContent('')
+      setcurrentTab(currentTab + 1)
+    }
     if (mode === 'edit') {
       copyCard.sections[currentTab].tabName = newTabName
       copyCard.sections[currentTab].sectionName = newPartName
@@ -175,8 +175,6 @@ export default function Edit({oneCard}) {
           <div>
             <Button icon="pi pi-save" className="p-button-secondary p-button-rounded ml-2" aria-label="Save" onClick={() => updateCard()} tooltip="Сохранить изменения" tooltipOptions={{ position: 'top' }} />
             <Button disabled={card.sections && card.sections.length > 0 || sectionContent !== '' ? true : false} icon="pi pi-list" className="p-button-secondary p-button-rounded ml-2" aria-label="AddTabs" onClick={() => setCard(Tabs)} tooltip="Добавить разделы" tooltipOptions={{ position: 'top' }} />
-            <Button disabled={card.sections && card.sections.length < 1 ? true : false} icon="pi pi-plus" className="p-button-secondary p-button-rounded ml-2" aria-label="Add" onClick={() => setNewTabDialog(true)} tooltip="Добавить раздел" tooltipOptions={{ position: 'top' }} />
-            <Button disabled={card.sections && card.sections.length < 1 ? true : false} icon="pi pi-minus" className="p-button-secondary p-button-rounded ml-2" aria-label="Remove" onClick={() => deleteLastTab()} tooltip="Удалить последний раздел" tooltipOptions={{ position: 'top' }} />
             <Button icon="pi pi-times" className="p-button-secondary p-button-rounded ml-2" aria-label="Clear" onClick={() => clearCard()} tooltip="Очистить анкету" tooltipOptions={{ position: 'top' }} />
             <Button icon="pi pi-trash" className="p-button-secondary p-button-rounded ml-2" aria-label="Delete" onClick={() => setConfirm(true)} tooltip="Удалить анкету" tooltipOptions={{ position: 'top' }} />
             <Button icon="pi pi-arrow-left" className="p-button-secondary p-button-rounded ml-2" aria-label="Back" onClick={() => router.back()} tooltip="Назад" tooltipOptions={{ position: 'top' }} />
