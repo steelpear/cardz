@@ -44,7 +44,7 @@ export default function Edit({oneCard}) {
     setEditorLoaded(true)
     setCardName(card.name)
     setTimeout(() => EventBus.$emit('card', card.name), 1100)
-  },[])
+  },[card])
 
   if (loading) {return (<Loader />)}
 
@@ -229,8 +229,8 @@ export default function Edit({oneCard}) {
   ) : (<MainLayout><div>Редактор загружается...</div></MainLayout>)
 }
 
-export const getServerSideProps = async (context) => {
-  const { id } = context.query
+export const getServerSideProps = async (query) => {
+  const { id } = query.params
   const response = await axios.post(`${process.env.API_URL}/api/card`, {id})
   const data = response.data
   if (!data) {return {notFound: true}}

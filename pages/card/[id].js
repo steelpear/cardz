@@ -21,7 +21,7 @@ export default function Card({card}) {
       setTimeout(() => setLoading(false), 1000)
     } else {setTimeout(() => setLoading(false), 1000)}
     setTimeout(() => EventBus.$emit('card', card.name), 1100)
-  },[])
+  },[card])
 
   if (loading) {return (<Loader />)}
 
@@ -88,8 +88,8 @@ export default function Card({card}) {
       </MainLayout>)
 }
 
-export const getServerSideProps = async (context) => {
-  const { id } = context.query
+export const getServerSideProps = async (query) => {
+  const { id } = query.params
   const response = await axios.post(`${process.env.API_URL}/api/card`, {id})
   const data = response.data
   if (!data) {return {notFound: true}}

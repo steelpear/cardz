@@ -5,7 +5,7 @@ export default function Info () {
     <MainLayout>
       <main>
         <div className="card">
-          Info
+          Coming soon...
         </div>
       </main>
     </MainLayout>
