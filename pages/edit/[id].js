@@ -121,14 +121,14 @@ export default function Edit({oneCard}) {
       copyCard.sections[currentTab].sectionText = sectionContent
       data.sections = copyCard.sections
     } else { data.description = sectionContent }
-    const response = await axios.post(`${process.env.API_URL}/api/update`, {id, data})
+    const response = await axios.post('/api/update', {id, data})
     if (response.data.state === 'true') {
       toast.current.show({ severity: 'success', summary: 'Сохранено', detail: 'Изменения сохранены' })
     } else { toast.current.show({ severity: 'error', summary: 'Ошибка!', detail: 'Ошибка сохранения!' }) }
   }
 
   const deleteCard = async () => {
-    const response = await axios.post(`${process.env.API_URL}/api/delete`,{id: card._id})
+    const response = await axios.post('/api/delete',{id: card._id})
     if (response.data.state === 'Deleted') {
       toast.current.show({ severity: 'success', summary: 'Удалено', detail: 'Анкета удалена' })
       setConfirm(false)

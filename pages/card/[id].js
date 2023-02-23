@@ -32,9 +32,9 @@ export default function OneCard({cardz}) {
     setIsCard(false)
     setLoading(true)
     const {id} = router.query
-    const hotel = await axios.post(`${process.env.API_URL}/api/hotel`,{id})
-    const city = await axios.post(`${process.env.API_URL}/api/city`,{id: hotel.data.city.pop()})
-    const response = await axios.post(`${process.env.API_URL}/api/create`, {
+    const hotel = await axios.post('/api/hotel',{id})
+    const city = await axios.post('/api/city',{id: hotel.data.city.pop()})
+    const response = await axios.post('/api/create', {
       name: hotel.data.name,
       hotel_id: hotel.data._id,
       description: '',
@@ -95,5 +95,9 @@ export const getServerSideProps = async (context) => {
   const { id } = context.query
   if (!mongoose.connections[0].readyState) {mongoose.connect(process.env.MONGODB_URL, {useNewUrlParser: true, useUnifiedTopology: true})}
   const data = await Card.findOne({hotel_id:id})
+  if (!data) {
+    const resp = {state: 'false'}
+    return {props: {cardz: JSON.stringify(resp)}}
+  }
   return {props: {cardz: JSON.stringify(data)}}
 }
