@@ -7,6 +7,7 @@ import { DataTable } from 'primereact/datatable'
 import { Column } from 'primereact/column'
 import { InputText } from 'primereact/inputtext'
 import { FilterMatchMode } from 'primereact/api'
+import mongoose from 'mongoose'
 import Card from '../models/Card'
         
 export default function Home ({cardz}) {
@@ -58,6 +59,7 @@ export default function Home ({cardz}) {
 }
 
 export const getServerSideProps = async () => {
+  if (!mongoose.connections[0].readyState) {mongoose.connect(process.env.MONGODB_URL, {useNewUrlParser: true, useUnifiedTopology: true})}
   const data = await Card.find({ active: true }, 'name city hotel_id')
   return {props: {cardz: JSON.stringify(data)}}
 }

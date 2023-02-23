@@ -12,6 +12,7 @@ import { Tooltip } from 'primereact/tooltip'
 import { Toast } from 'primereact/toast'
 import { ContextMenu } from 'primereact/contextmenu'
 import styles from '@/styles/Edit.module.css'
+import mongoose from 'mongoose'
 import Card from '../../models/Card'
 
 export default function Edit({oneCard}) {
@@ -232,6 +233,7 @@ export default function Edit({oneCard}) {
 
 export const getServerSideProps = async (context) => {
   const { id } = context.query
+  if (!mongoose.connections[0].readyState) {mongoose.connect(process.env.MONGODB_URL, {useNewUrlParser: true, useUnifiedTopology: true})}
   const data = await Card.findOne({hotel_id:id})
   return {props: {oneCard: JSON.stringify(data)}}
 }

@@ -9,6 +9,7 @@ import { Button } from 'primereact/button'
 import { Dialog } from 'primereact/dialog'
 import { Loader } from '../../components/Loader'
 import styles from '@/styles/Card.module.css'
+import mongoose from 'mongoose'
 import Card from '../../models/Card'
 
 export default function OneCard({cardz}) {
@@ -92,6 +93,7 @@ export default function OneCard({cardz}) {
 
 export const getServerSideProps = async (context) => {
   const { id } = context.query
+  if (!mongoose.connections[0].readyState) {mongoose.connect(process.env.MONGODB_URL, {useNewUrlParser: true, useUnifiedTopology: true})}
   const data = await Card.findOne({hotel_id:id})
   return {props: {cardz: JSON.stringify(data)}}
 }
