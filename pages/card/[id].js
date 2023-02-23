@@ -9,8 +9,10 @@ import { Button } from 'primereact/button'
 import { Dialog } from 'primereact/dialog'
 import { Loader } from '../../components/Loader'
 import styles from '@/styles/Card.module.css'
+import Card from '../../models/Card'
 
-export default function Card({card}) {
+export default function OneCard({cardz}) {
+  const [card, setCard] = useState(JSON.parse(cardz))
   const [loading, setLoading] = useState(true)
   const [isCard, setIsCard] = useState(false)
   const router = useRouter()
@@ -88,10 +90,8 @@ export default function Card({card}) {
       </MainLayout>)
 }
 
-export const getServerSideProps = async (query) => {
-  const { id } = query.params
-  const response = await axios.post(`${process.env.API_URL}/api/card`, {id})
-  const data = response.data
-  if (!data) {return {notFound: true}}
-  return {props: {card: data}}
+export const getServerSideProps = async (context) => {
+  const { id } = context.query
+  const data = await Card.findOne({hotel_id:id})
+  return {props: {cardz: JSON.stringify(data)}}
 }

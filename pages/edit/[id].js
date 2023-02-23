@@ -12,13 +12,14 @@ import { Tooltip } from 'primereact/tooltip'
 import { Toast } from 'primereact/toast'
 import { ContextMenu } from 'primereact/contextmenu'
 import styles from '@/styles/Edit.module.css'
+import Card from '../../models/Card'
 
 export default function Edit({oneCard}) {
   const toast = useRef(null)
   const cm = useRef(null)
   const editorRef = useRef()
   const router = useRouter()
-  const [card, setCard] = useState(oneCard)
+  const [card, setCard] = useState(JSON.parse(oneCard))
   const [editorLoaded, setEditorLoaded] = useState(false)
   const {CKEditor, Editor} = editorRef.current || {}
   const [loading, setLoading] = useState(true)
@@ -229,10 +230,8 @@ export default function Edit({oneCard}) {
   ) : (<MainLayout><div>Редактор загружается...</div></MainLayout>)
 }
 
-export const getServerSideProps = async (query) => {
-  const { id } = query.params
-  const response = await axios.post(`${process.env.API_URL}/api/card`, {id})
-  const data = response.data
-  if (!data) {return {notFound: true}}
-  return {props: {oneCard: data}}
+export const getServerSideProps = async (context) => {
+  const { id } = context.query
+  const data = await Card.findOne({hotel_id:id})
+  return {props: {oneCard: JSON.stringify(data)}}
 }

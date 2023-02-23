@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
-import axios from 'axios'
 import styles from '@/styles/Home.module.css'
 import { Loader } from '../components/Loader'
 import { MainLayout } from '../components/MainLayout'
@@ -8,9 +7,11 @@ import { DataTable } from 'primereact/datatable'
 import { Column } from 'primereact/column'
 import { InputText } from 'primereact/inputtext'
 import { FilterMatchMode } from 'primereact/api'
+import Card from '../models/Card'
         
-export default function Home ({cards}) {
+export default function Home ({cardz}) {
   const router = useRouter()
+  const [cards, setCards] = useState(JSON.parse(cardz))
   const [loading, setLoading] = useState(true)
   const [filters, setFilters] = useState({'global': { value: null, matchMode: FilterMatchMode.CONTAINS }})
   const [globalFilterValue, setGlobalFilterValue] = useState('')
@@ -57,8 +58,6 @@ export default function Home ({cards}) {
 }
 
 export const getServerSideProps = async () => {
-  const response = await axios.get(`${process.env.API_URL}/api/cards`)
-  const data = response.data
-  if (!data) {return {notFound: true}}
-  return {props: {cards: data}}
+  const data = await Card.find({ active: true }, 'name city hotel_id')
+  return {props: {cardz: JSON.stringify(data)}}
 }
