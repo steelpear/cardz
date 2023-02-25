@@ -183,7 +183,7 @@ export default function Edit({oneCard}) {
           </div>
         </div>
         {card.sections && card.sections.length > 0 ? <>
-          <div style={{marginBottom:'15px',lineHeight:'23px'}}>
+          <div style={{marginBottom:'15px',lineHeight:'22px'}}>
             {card.sections.map((section, index) => {
               return (
                 <div className={styles.tab} key={index}>

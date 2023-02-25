@@ -30,7 +30,7 @@ export function MainLayout({ children }) {
       <nav className={styles.nav}>
         <div className='flex align-items-center justify-content-center'>
           <Link href={'/'} className={router.route === '/' ? styles.disabledlink : ''}><i className="pi pi-home" style={{'marginRight': '12px', 'fontSize': '1.8em', 'color': router.route === '/' ? 'lightgrey' : 'white' }}></i></Link>
-          <div className='flex align-items-center justify-content-center' style={{'fontSize': '1.4em', 'color': 'white'}}>Анкеты объектов{router.route === '/' ? <>&nbsp;/&nbsp;Главная</> : <></>}{router.route === '/info' ? <>&nbsp;/&nbsp;Инструкция</> : <></>}{router.route === '/card/[id]' ? <>&nbsp;/&nbsp;Карточка объекта</> : <></>}{router.route === '/edit/[id]' ? <>&nbsp;/&nbsp;Редактирование анкеты</> : <></>} {object ? <>/<div style={{fontSize:'18px',color:'lavender', width:'650px', whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis', padding:'3px 0 0 5px'}}> {object}</div></> : <></>}</div>
+          <div className='flex align-items-center justify-content-center' style={{'fontSize': '1.2em', 'color': 'white'}}>Анкеты объектов{router.route === '/' ? <>&nbsp;/&nbsp;Главная</> : <></>}{router.route === '/info' ? <>&nbsp;/&nbsp;Инструкция</> : <></>}{router.route === '/card/[id]' ? <>&nbsp;/&nbsp;Карточка объекта</> : <></>}{router.route === '/edit/[id]' ? <>&nbsp;/&nbsp;Редактирование анкеты</> : <></>} {object ? <>/<div style={{fontSize:'18px',color:'lavender', width:'fit-content', whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis', padding:'3px 0 0 5px'}}> {object}</div></> : <></>}</div>
         </div>
         <div className="flex align-items-center">
           <span style={{color:'white', marginRight: '15px'}}>{user}</span>

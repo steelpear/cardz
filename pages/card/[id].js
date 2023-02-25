@@ -82,7 +82,7 @@ export default function OneCard({cardz}) {
     </MainLayout>
   ) : (<MainLayout>
         <Dialog header="Анкета не найдена!" headerStyle={{textAlign: 'center'}} visible={isCard} closable=
-        {false} style={{ width: '35vw' }}>
+        {false} style={{ width: '40vw' }}>
           <div className="card flex justify-content-between align-items-center">
             <Button label="К списку анкет" onClick={() => router.push('/')} />
             <Button label="Создать анкету" onClick={() => createCard()} />
