@@ -18,7 +18,12 @@ export default function Auth() {
   const checkLogin = async () => {
     const user = await axios.post('https://broniryem.ru/api/Mobile/check', {login})
     if (user.data && user.data.user === login) {
-      Cookies.set('_qHWj5dMs-p27yKjuy', login, { expires: 30 })
+      Cookies.set('_qHWj5dMs-p27yKjuy', login, {
+        expires: 30,
+        path: '/',
+        sameSite: 'None',
+        secure: true 
+      })
       toast.current.show({ severity: 'success', summary: 'Удачно!', detail: 'Вы авторизованы.' })
       setTimeout(() => router.push('/'), 500)
     } else {toast.current.show({ severity: 'error', summary: 'Ошибка!', detail: 'Ошибка авторизации!' })}
